@@ -1,0 +1,14 @@
+[Unit]
+Description=Tmux session for VPN
+
+[Service]
+# with Type=forking, we can start only on tmux session for some reason...
+# Type=oneshot + RemainAfterExit=yes seems to fix that.
+# See https://bbs.archlinux.org/viewtopic.php?id=194396
+Type=oneshot
+RemainAfterExit=yes
+Environment=TMPDIR=/tmp/%u
+ExecStartPre=/usr/bin/mkdir -p -m 700 ${TMPDIR}
+ExecStart=/usr/bin/tmux -2 new-session -s vpn -d
+ExecStartPost=/usr/bin/tmux send -t vpn "vpn" Enter
+ExecStop=/usr/bin/tmux kill-session -t vpn

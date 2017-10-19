@@ -1,0 +1,8 @@
+rename-window -t zsh imap
+splitw -v -p 50 -t imap
+send-keys -t imap.0 "imapfilter -c ${HOME}/.config/mail/nokia/imapfilter.lua" Enter
+send-keys -t imap.1 "offlineimap -c ${HOME}/.config/mail/nokia/offlineimaprc" Enter
+
+new-window
+rename-window -t zsh mail
+send-keys -t mail "NOTMUCH_CONFIG=${HOME}/.config/mail/nokia/notmuch-config gvim -u ${HOME}/.config/vim/nokiarc -v -c ':NotMuch'" Enter

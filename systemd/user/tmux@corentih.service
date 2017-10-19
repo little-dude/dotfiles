@@ -1,0 +1,16 @@
+# slightly adapted from https://wiki.archlinux.org/index.php/Tmux#Autostart_with_systemd
+# if using zprezto, which sets TMPDIR, see: https://bbs.archlinux.org/viewtopic.php?id=204596
+[Unit]
+Description=Start tmux in detached session
+
+[Service]
+# with Type=forking, we can start only on tmux session for some reason...
+# Type=oneshot + RemainAfterExit=yes seems to fix that.
+# See https://bbs.archlinux.org/viewtopic.php?id=194396
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/%u/
+Environment=TMPDIR=/tmp/%u
+ExecStartPre=/usr/bin/mkdir -p -m 700 ${TMPDIR}
+ExecStart=/usr/bin/tmux -2 new-session -s %u -d
+ExecStop=/usr/bin/tmux kill-session -t %u

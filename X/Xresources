@@ -1,0 +1,93 @@
+!--------- general config -----------
+!This seems to be an issue when attaching a remote tmux session...
+URxvt*termName: rxvt-unicode
+!Avoid switching to iso mode when pression ctrl+shift
+URxvt*iso14755: false
+URxvt*iso14755_52: false
+!Dont set this to true, otherwise alt not working in urxvt
+URxvt*meta8: false
+!Let tmux handle history
+URxvt*saveLines: 0
+URxvt*scrollBar: false
+
+!----------- fonts---------------------
+!Works quite well
+!URxvt*font: xft:Monospace:size=12:antialias=true
+!
+!Monaco is the default iterm font but xorg can't find it though it's installed
+!URxvt*font: xft:Monaco:size=12
+!
+!Terminus is nice but the prompt is weird ==> only if font is too small
+!URxvt*font: xft:Terminus:size=12:antialias=true
+URxvt*font: xft:Terminus:pixelsize=12,xft:Inconsolata\ for\ Powerline:pixelsize=12
+!
+!not a big fan of it whith terminus
+!URxvt.letterSpace: -1
+!
+URxvt*allow_bold: true
+
+!-------------- perl extensions -----------
+!Note add 'tabbed' for tabs. dont need with tmux
+URxvt*perl-ext-common: default,matcher,font-size,fullscreen
+! clickable URLs
+URxvt*colorUL: #3465A
+URxvt*url-launcher: /usr/bin/chromium
+URxvt*matcher.button: 1
+!URxvt*tabbed.tabbar-fg: 10
+!URxvt*tabbed.tabbar-bg: 8
+!URxvt*tabbed.tab-fg: 14
+!URxvt*tabbed.tab-bg: 8
+URxvt.keysym.C-plus: perl:font-size:increase
+URxvt.keysym.C-minus: perl:font-size:decrease
+URxvt*keysym.F11: perl:fullscreen:switch
+
+!----------- colors ---------------------
+! URxvt*depth: 32
+URxvt*foreground: grey
+URxvt*background: #3def3def3def
+URxvt*shading: 10
+URxvt*tint: black
+URxvt*cursorBlink: true
+URxvt*cursorColor: #00F3FF
+URxvt*color0  :#000000000000
+URxvt*color1  :#ffff24842484
+URxvt*color2  :#0000aaaa0000
+URxvt*color3  :#aaaa55550000
+URxvt*color4  :#0f65dd7247b4
+URxvt*color5  :#cbf477ab1440
+URxvt*color6  :#0000aaaaaaaa
+URxvt*color7  :#ffffd2eed2ee
+URxvt*color8  :#555555555555
+URxvt*color9  :#ffff55555555
+URxvt*color10 :#5555ffff5555
+URxvt*color11 :#ffffffff5555
+URxvt*color12 :#d73f79a3c348
+URxvt*color13 :#ffff5555ffff
+URxvt*color14 :#5555ffffffff
+URxvt*color15 :#ffffffffffff
+
+
+!URxvt*color0  : #424242
+!URxvt*color8  : #000000
+!! red
+!URxvt*color1  : #CC0000
+!URxvt*color9  : #EF2929
+!! green
+!URxvt*color2  : #4E9A06
+!URxvt*color10 : #1CB500
+!! yellow
+!URxvt*color3  : #C4A000
+!URxvt*color11 : #FCE94F
+!! blue
+!URxvt*color4  : #3465A4
+!URxvt*color12 : #729FCF
+!! magenta
+!URxvt*color5  : #75507B
+!URxvt*color13 : #AD7FA8
+!! cyan
+!URxvt*color6  : #06989A
+!URxvt*color14 : #00F3FF
+!! white
+!URxvt*color7  : #D3D7CF
+!URxvt*color15 : #EEEEEC
+

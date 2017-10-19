@@ -1,0 +1,319 @@
+" TODO: "   - become a fugitive power username
+"   - steal ideas from this vimrc https://amix.dk/vim/vimrc.html
+
+filetype off                                    " required!
+
+" source the .vimrc file on save to apply all changes immediately
+if has("autocmd")
+    autocmd! bufwritepost .vimrc source ~/.vimrc
+endif
+
+
+    call plug#begin('~/.vim/plugged')
+
+    Plug 'imain/notmuch-vim'
+    Plug 'airblade/vim-gitgutter'                 " show signs for unstaged changes
+    Plug 'scrooloose/nerdtree'                    " file explorer
+    Plug 'vim-scripts/AutoComplPop'               " basic completion plugin
+    Plug 'zeis/vim-kolor'                         " colorscheme
+    Plug 'joshdick/onedark.vim'
+    Plug 'tpope/vim-fugitive'                     " git wrapper
+    Plug 'tpope/vim-unimpaired'
+    call plug#end()
+
+    filetype plugin indent on                   " required!
+" }
+
+" Tmux configuration {
+    " See http://unix.stackexchange.com/questions/29907/how-to-get-vim-to-work-with-tmux-properly
+    if &term =~ '^screen'
+        execute "set <xUp>=\e[1;*A"
+        execute "set <xDown>=\e[1;*B"
+        execute "set <xRight>=\e[1;*C"
+        execute "set <xLeft>=\e[1;*D"
+    endif
+" }
+
+" General {
+    set t_Co=256                                " Necessary for colors in tmux I think. I don't really remember why it's there
+    set noeb vb t_vb=                           " Disable all fucking bells
+    syntax on                                   " Enable syntax highlighting
+    set nocompatible                            " Disable compatibility for VI
+    set bs=2                                    " Have the backspace in insert mode
+    set history=500                             " Keep 500 lines of history
+    set showmatch                               " Show matching brackets.
+    set mat=1                                   " When typing ')', highlight the matching '(' (also work with [] and {})
+    set wildmode=longest,list                   " bash completion
+    set scrolloff=5                             " 5 line above / below the cursor when scrolling
+    set cursorline                              " show the line on which the curso is
+    set hidden                                  " Don't have to save the buffer all the time
+    set pastetoggle=<F3>                        " Avoid indentation when pasting
+    " set autowrite                             " Automatically save before commands like :next and :make
+" }
+
+" UI {
+
+    " Mouse
+    set mousefocus
+    set mouse=a
+
+    " Line numbers
+    set number
+
+    " Status line
+    " set showcmd                                 " Show (partial) command in status line.
+    " set statusline=%f                           " File name
+    " set statusline+=\ %y                        " Space + file type
+    " set statusline+=%=                          " Left / Right separator
+    " set statusline+=\ [col:%c%V,                " Cursor column
+    " set statusline+=\ line:%l                   " Cursor line
+    " set statusline+=/%L]                        " Total line
+    " set statusline+=\ %P                        " Percent of the file
+    " set statusline+=\                           " Final space
+    " " set statusline+=\ [%{&fileencoding}]      " File encoding
+    " " set statusline+=[%b-0x%B]                 " Ascii character in decimal and hexadecimal
+    set laststatus=2 " Always display the statusline in all windows
+    set showtabline=2 " Always display the tabline, even if there is only one tab
+    set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+
+    " Colors {
+        set background=dark
+        " let g:kolor_italic=1                    " Enable italic. Default: 1
+        " let g:kolor_bold=0                      " Enable bold. Default: 1
+        " let g:kolor_underlined=1                " Enable underline. Default: 0
+        " let g:kolor_alternative_matchparen=1    " Gray 'MatchParen' color. Default: 0
+        " Use a nice colorscheme. 
+        " colorscheme kolor
+        colorscheme onedark
+        " transparent background
+        highlight Normal ctermbg=none
+        " colors tabs
+        highlight IndentGuidesOdd  ctermbg=none
+        highlight IndentGuidesEven ctermbg=none
+        " colors in visual mode
+        highlight Visual term=reverse cterm=reverse    
+        " colors in completion menu
+        highlight Pmenu term=reverse ctermbg=white
+        " colors of line numbers
+        highlight LineNr term=bold cterm=NONE ctermfg=Grey ctermbg=none gui=none guifg=Grey guibg=NONE
+
+
+        " highlight ExtraWhitespace
+        highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
+        " Show trailing whitepace and spaces before a tab:
+        " autocmd Syntax * syn match ExtraWhitespace /\s\+$\|\t\+/
+        autocmd Syntax * syn match ExtraWhitespace /\s\+$/
+    " }
+" }
+
+" Search {
+    set ignorecase                              " Do case insensitive matching
+    set smartcase                               " Do smart case matching
+    set incsearch                               " Incremental search
+    set hlsearch                                " Highlight searched expression
+" }
+
+" Folding {
+    set foldenable                              " Enable folding
+    set foldmethod=syntax                       " Automatic folding depending based on language
+    set foldlevelstart=2                        " Start folding at lvl 2
+    let tcl_fold=1                              " Add folding for tcl
+" }
+
+"Tabs {
+    set autoindent                              " Indent automatically
+    set expandtab                               " use soft tabs (spaces)
+    set tabstop=4                               " 1 tab is 4 spaces large
+    set softtabstop=0                           " use tabstop value for soft tabs
+    set shiftwidth=0                            " use tabstop value for hard tabs
+" }
+
+" Mappings {
+
+    " normal mode by pressing jk.
+    map! jk <ESC>
+
+    " 0 goes to the first non blank character
+    nnoremap 0 ^
+    nnoremap - g_l
+
+    " select the text that was last edited/pasted
+    nmap gV `[v`]
+
+    " define a new leader key.
+    let mapleader=","
+
+    " stop search
+    map no :nohlsearch<CR>
+    " Do <F4> on a word to grep it recursively in the current directory
+    " Very cool but it's a blocking function so don't use it at the root of a huge directory
+    map <F4> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+
+    " when editing a file without the right permission, we can't save it. This is a shortcut to get sudo rights to write the file
+    cmap w!! w !sudo tee >/dev/null %
+
+    " Bubbling Text (see : http://unix.stackexchange.com/questions/1709/how-to-fix-ctrl-arrows-in-vim) {
+        " Single line bubbling with arrow UP and arrow DOWN
+         nmap <ESC>[A [e
+         nmap <ESC>[B ]e
+        " Multiple line bubbling with arrow UP and arrow DOWN
+         vmap <ESC>[A [egv
+         vmap <ESC>[B ]egv
+
+    " } 
+
+    " Copy/paste {
+        " usually alias vim to gvim -v.
+        "
+        " To know about clipboard support, use vim --version | grep clipboard
+
+        " X11 clipboard (Ctrl-C/V) {
+            nmap <C-p> "+p
+            nmap <C-y> "+yy
+            vmap <C-d> "+d
+            vmap <C-p> d$"+p
+            vmap <C-y> "+y
+        " }
+
+        " secondary clipboard (shift+insert, or middleclick) {
+            " TODO
+        " }
+
+        " xclip/xsel integration {
+            " TODO
+        " }
+
+    " }
+
+    " splits {
+        " jump to last split
+        nnoremap <C-x> <C-w>p
+
+        " move to upper split
+        nnoremap <C-k> <C-w>k
+        " move to lower split
+        nnoremap <C-l> <C-w>l
+        " move to left split
+        nnoremap <C-h> <C-w>h
+        " move to right split (dump remap necessary because vim-latex imaps plugin already maps ctrl-j...)
+        nnoremap <SID>I_won’t_ever_type_this <Plug>IMAP_JumpForward
+        nnoremap <C-j> <C-w>j
+        "nnoremap <a-j> <c-w>j
+        "nnoremap <a-k> <c-w>k
+        "nnoremap <a-h> <c-w>h
+        "nnoremap <a-l> <c-w>l
+        "vnoremap <a-j> <c-\><c-n><c-w>j
+        "vnoremap <a-k> <c-\><c-n><c-w>k
+        "vnoremap <a-h> <c-\><c-n><c-w>h
+        "vnoremap <a-l> <c-\><c-n><c-w>l
+        "inoremap <a-j> <c-\><c-n><c-w>j
+        "inoremap <a-k> <c-\><c-n><c-w>k
+        "inoremap <a-h> <c-\><c-n><c-w>h
+        "inoremap <a-l> <c-\><c-n><c-w>l
+        "cnoremap <a-j> <c-\><c-n><c-w>j
+        "cnoremap <a-k> <c-\><c-n><c-w>k
+        "cnoremap <a-h> <c-\><c-n><c-w>h
+        "cnoremap <a-l> <c-\><c-n><c-w>l
+        "if has('nvim')
+        "    tnoremap <a-j> <c-\><c-n><c-w>j
+        "    tnoremap <a-k> <c-\><c-n><c-w>k
+        "    tnoremap <a-h> <c-\><c-n><c-w>h
+        "    tnoremap <a-l> <c-\><c-n><c-w>l
+        "    au WinEnter *pid:* call feedkeys('i')
+        "endif
+
+
+        " maximse current split
+        " inoremap <C-Space> <C-x><C-o>
+        " inoremap <C-@> <C-Space>
+        " nmap <C-Space> :on<CR> 
+
+        " resize split
+        nnoremap + <C-w>+
+        " we use this one to go to beginning of the line
+        " nnoremap - <C-w>- 
+        nnoremap > <C-w>>
+        nnoremap < <C-w><
+    " }
+
+" }
+
+" Plugins configuration {
+
+    " NerdTree {
+        nnoremap <silent> <F9> :NERDTreeToggle<CR>
+    " }
+
+    " minibufexpl {
+        " let g:miniBufExplUseSingleClick = 1         " one click to select buffer in explorer
+
+        " show/hide MiniBufExplorer
+        " nnoremap <silent> <F12> :MBEToggle<CR>       
+
+        " color code in MiniBufExplorer. not always working, not sure why.
+        " hi MBEVisibleChanged guibg=blue ctermbg=blue
+        " hi MBEVisibleActiveNormalNormal guibg=yellow ctermbg=yellow
+        " hi MBEVisibleActiveChanged guibg=red ctermbg=red
+
+        " display next buffer in current split
+        " nmap <leader>n :MBEbf<CR> 
+        " display previous buffer in current split
+        " nmap <leader>b :MBEbb<CR> 
+
+        " this one would be nice to have : F1 jump to MBE if currently in a split,
+        " and back to last split if currently in MBE. But for some reason it's not
+        " working. Maybe try to see :
+        " http://stackoverflow.com/questions/15781615/how-to-map-a-sequence-in-vim-conditionally-to-run-external-programs-without-prin
+        " nnoremap @% == '-MiniBufExplorer-' <silent> <F1> ? <C-w>p : :MBEFocus<CR>
+    " }
+
+    " Command-T {
+        " quickly navigate between buffers. Type something to refine or use C-j and C-k to navigate.
+        nnoremap <leader><leader> :CommandTBuffer<CR>
+    " }
+
+    autocmd BufReadPost fugitive://* set bufhidden=delete
+    set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+    " auto-format
+    nmap <Leader>f :Autoformat<CR>
+" }
+
+" Functions {
+
+    " vimdiff of current file and saved file on the disk.
+    function! s:DiffWithSaved()
+        let filetype=&ft
+        diffthis
+        vnew | r # | normal! 1Gdd
+        diffthis
+        exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+    endfunction
+    com! DiffSaved call s:DiffWithSaved()
+
+    let g:key_codes="DEFAULT"
+    function! ToggleKeyCodes()
+		" See http://vim.wikia.com/wiki/Mapping_fast_keycodes_in_terminal_Vim
+		" and http://unix.stackexchange.com/questions/53581/sending-function-keys-f1-f12-over-ssh
+		" Now function keys work through SSH + tmux :)
+        if !exists("g:key_codes")
+            let g:key_codes="DEFAULT"
+        endif
+		if g:key_codes == "DEFAULT"
+            let g:key_codes = "SSH"
+            set <F1>=[11~
+            set <F2>=[12~
+            set <F3>=[13~
+            set <F4>=[14~
+            set <F5>=[15~
+        else
+            let g:key_codes = "DEFAULT"
+            set <F1>=OP
+            set <F2>=OQ
+            set <F3>=OR
+            set <F4>=OS
+            set <F5>=[15~
+        endif
+    endfunction
+    com! ToggleKeyCodes call ToggleKeyCodes()
+" }

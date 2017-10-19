@@ -1,0 +1,7 @@
+[Unit]
+Description=Load kernel modules and setup bridge for virtualbox
+
+[Service]
+Type=oneshot
+ExecStart=/home/corentih/.bin/virtualbox_service.sh start
+ExecStop=/home/corentih/.bin/virtualbox_service.sh stop

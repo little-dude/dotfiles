@@ -1,0 +1,23 @@
+source $HOME/.vimrc
+let $NOTMUCH_CONFIG = expand("~/.config/mail/nokia/notmuch-config")
+
+let g:notmuch_sendmail_param = {
+    \ 'arguments': '-C ~/.config/mail/nokia/msmtprc',
+\ }
+let g:notmuch_folders = [
+    \ [ 'unread', 'tag:unread' ],
+    \ [ '', '' ],
+    \ [ 'inbox', 'tag:inbox' ],
+    \ [ 'jira', 'tag:jira' ],
+    \ [ 'github', 'tag:github' ],
+    \ [ 'nuage-test', 'tag:nuage-test' ],
+    \ [ 'nuage-infra', 'tag:nuage-infra' ],
+    \ [ 'nuage-interest', 'tag:nuage-interest' ],
+    \ [ 'regressions', 'tag:regressions' ],
+    \ [ 'sw-nuage', 'tag:sw-nuage' ],
+    \ [ 'sent', 'tag:sent' ],
+    \ [ 'deleted', 'tag:deleted' ],
+    \ [ '', '' ],
+    \ [ '* important *', 'tag:important' ],
+    \ ]
+autocmd FileType notmuch-show setlocal foldmethod=manual foldlevelstart=1
